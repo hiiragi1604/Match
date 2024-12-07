@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-// Define the Student interface
-interface IStudent extends Document {
+// Define the User interface
+interface IUser extends Document {
     personalInfo: {
         name: string;
         dob: Date;
@@ -10,7 +10,7 @@ interface IStudent extends Document {
         email: string;
         password: string;  //should be hashed
     };
-    functionalInfo: {
+    technicalInfo: {
         skills: string[];
         degree: string;
         languages: string[];
@@ -21,11 +21,13 @@ interface IStudent extends Document {
             techUsed: string[];
             link?: string; // Optional
         }[];
+        pastMatchProjects: mongoose.Schema.Types.ObjectId[];
     };
+    projectsOwned: mongoose.Schema.Types.ObjectId[];
 }
 
-// Create the Student Schema
-const studentSchema = new Schema<IStudent>({
+// Create the User Schema
+const userSchema = new Schema<IUser>({
     personalInfo: {
         name: { type: String, required: true },
         dob: { type: Date, required: true },
@@ -34,7 +36,7 @@ const studentSchema = new Schema<IStudent>({
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true }
     },
-    functionalInfo: {
+    technicalInfo: {
         skills: { type: [String], default: [] },
         degree: { type: String, required: true },
         languages: { type: [String], default: [] },
@@ -46,11 +48,13 @@ const studentSchema = new Schema<IStudent>({
                 techUsed: { type: [String], default: [] },
                 link: { type: String }
             }
-        ]
-    }
+        ],
+        pastMatchProjects: { type: [mongoose.Schema.Types.ObjectId], ref: 'Project', default: [] }
+    },
+    projectsOwned: { type: [mongoose.Schema.Types.ObjectId], ref: 'Project', default: [] }
 });
 
-// Create the Student Model
-const Student = mongoose.model<IStudent>('Student', studentSchema);
+// Create the User Model
+const User = mongoose.model<IUser>('User', userSchema);
 
-export default Student;
+export default User;
