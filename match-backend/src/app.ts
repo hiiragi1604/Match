@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import { errorHandler } from "./middleware/errorHandler";
 import UserRouter from "./routes/userRoutes";
+import projectRoutes from "./routes/projectRoutes";
 import cors from "cors";
 
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(errorHandler);
 
 // Routes
 app.use("/user", UserRouter);
+app.use("/projects", projectRoutes); 
 
 // Test route
 app.get("/ping", (req, res) => {
