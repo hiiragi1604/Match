@@ -11,6 +11,7 @@ export const getAllUsers = async (
     try {
         const users = await User.find();
         res.status(200).json(users);
+        return;
     } catch (error) {
         next(error);
     }
@@ -47,6 +48,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
         }
         const user = await User.create(req.body);
         res.status(201).json(user);
+        return;
     } catch (error) {
         if (error instanceof mongoose.Error.ValidationError) {
             res.status(400).json({ message: "Invalid user data" });
@@ -55,4 +57,23 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
         next(error);
     }
 };
+
+//Update user
+export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true,
+        });
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+        res.status(200).json(user);
+        return;
+    } catch (error) {
+        next(error);
+    }
+
+}
 
