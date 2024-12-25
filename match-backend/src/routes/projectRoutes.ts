@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { getAllProjects, getProjectById, createProject, updateProject, deleteProject} from "../controllers/projectController";
+import { getAllProjects, getProjectById, createProject, updateProject, deleteProject, searchProjects} from "../controllers/projectController";
 
 const ProjectRouter = express.Router();
 
@@ -13,15 +13,18 @@ ProjectRouter.get("/test", (req: Request, res: Response) => {
 ProjectRouter.get("/all", getAllProjects);
 
 // GET a project by ID
-ProjectRouter.get("/:id", getProjectById);
+ProjectRouter.get("/getById/:id", getProjectById);
 
 // POST a new project
 ProjectRouter.post("/create", createProject);
 
 // PUT (update) a project by ID
-ProjectRouter.put("/:id", updateProject);
+ProjectRouter.put("/update/:id", updateProject);
 
 // DELETE a project by ID
-ProjectRouter.delete("/:id", deleteProject);
+ProjectRouter.delete("/delete/:id", deleteProject);
+
+// Search projects
+ProjectRouter.get("/search", searchProjects);
 
 export default ProjectRouter;
