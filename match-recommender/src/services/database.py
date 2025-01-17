@@ -6,6 +6,7 @@ from src.models.user import user_schema
 from src.models.projectEmbedding import project_embedding_schema
 from src.models.userEmbedding import user_embedding_schema
 from src.config import MONGODB_URI
+from src.shared import Shared
 
 def get_database() -> Database:
     #Get the database instance
@@ -41,6 +42,9 @@ def init_collections(db: Database):
                   validationLevel="strict")
     except pymongo.errors.OperationFailure:
         db.create_collection("userEmbeddings", validator=user_embedding_schema)
+
+    Shared.project_embeddings_list = list(db.projectEmbeddings.find())
+    Shared.user_embeddings_list = list(db.userEmbeddings.find())
 
 def get_collection(db: Database, name: str) -> Collection:
     #Get a collection by name
