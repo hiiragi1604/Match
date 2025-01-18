@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { getAllProjects, getProjectById, createProject, updateProject, deleteProject, searchProjects, applyToProject, updateApplicationStatus, setRoleForProjectMember} from "../controllers/projectController";
+import { getAllProjects, getProjectById, createProject, updateProject, deleteProject, searchProjects, applyToProject, updateApplicationStatus, setRoleForProjectMember, setProjectVisibility} from "../controllers/projectController";
 
 const ProjectRouter = express.Router();
 
@@ -34,6 +34,9 @@ ProjectRouter.put("/updateApplication", updateApplicationStatus);
 
 // Set project role
 ProjectRouter.put("/setRole", setRoleForProjectMember);
+
+// Set project visibility
+ProjectRouter.put("/setVisibility", setProjectVisibility);
 
 
 
