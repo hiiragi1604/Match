@@ -1,5 +1,17 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+// Define the AppliedProject interface and schema first
+interface IAppliedProject {
+    projectId: mongoose.Types.ObjectId;
+    status: string;
+}
+
+// Create the AppliedProject Schema
+const appliedProjectSchema = new Schema({
+    projectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
+    status: { type: String, required: true }
+});
+
 // Define the User interface
 interface IUser extends Document {
     personalInfo: {
@@ -21,9 +33,10 @@ interface IUser extends Document {
             techUsed: string[];
             link?: string; // Optional
         }[];
-        pastMatchProjects: mongoose.Schema.Types.ObjectId[];
+        pastMatchProjects: mongoose.Types.ObjectId[];
     };
-    projectsOwned: mongoose.Schema.Types.ObjectId[];
+    projectsOwned: mongoose.Types.ObjectId[];
+    appliedProjects: IAppliedProject[];
 }
 
 // Create the User Schema
@@ -51,7 +64,8 @@ const userSchema = new Schema<IUser>({
         ],
         pastMatchProjects: { type: [mongoose.Schema.Types.ObjectId], ref: 'Project', default: [] }
     },
-    projectsOwned: { type: [mongoose.Schema.Types.ObjectId], ref: 'Project', default: [] }
+    projectsOwned: { type: [mongoose.Schema.Types.ObjectId], ref: 'Project', default: [] },
+    appliedProjects: { type: [appliedProjectSchema], default: [] }
 });
 
 // Create the User Model

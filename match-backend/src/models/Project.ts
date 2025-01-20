@@ -14,6 +14,8 @@ interface IProject extends Document {
     languages: string[];
     field: string;
     location?: string; // Optional
+    applicants: mongoose.Types.ObjectId[];
+    visibility: string
 }
 
 const projectMemberSchema = new Schema<IProjectMember>({
@@ -29,7 +31,9 @@ const projectSchema = new Schema<IProject>({
     desiredSkills: { type: [String], default: [] },
     languages: { type: [String], default: [] },
     field: { type: String, required: true },
-    location: { type: String, default: null } // Optional
+    location: { type: String, default: null }, // Optional
+    applicants: { type: [mongoose.Schema.Types.ObjectId], ref: 'User', default: [] }, // Optional
+    visibility: { type: String, required: true }
 });
 
 // Create the Project Model
