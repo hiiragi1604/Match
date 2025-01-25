@@ -65,3 +65,6 @@ wheels/
 .cache/
 .temp/
 .tmp/
+
+# Firebase
+ServiceAccountKey.json

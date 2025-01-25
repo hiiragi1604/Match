@@ -14,6 +14,7 @@ const appliedProjectSchema = new Schema({
 
 // Define the User interface
 interface IUser extends Document {
+    firebaseUid: string;
     personalInfo: {
         name: string;
         dob: Date;
@@ -41,27 +42,25 @@ interface IUser extends Document {
 
 // Create the User Schema
 const userSchema = new Schema<IUser>({
+    firebaseUid: { type: String, required: false, unique: true }, //Set to false because we are not creating a user in Firebase when we create a user in MongoDB (Testing purposes)
     personalInfo: {
-        name: { type: String, required: true },
-        dob: { type: Date, required: true },
-        university: { type: String, required: true },
-        username: { type: String, required: true, unique: true },
-        email: { type: String, required: true, unique: true },
-        password: { type: String, required: true }
+        name: { type: String, required: false, default: "" },
+        dob: { type: Date, required: false, default: new Date() },
+        university: { type: String, required: false, default: "" },
     },
     technicalInfo: {
         skills: { type: [String], default: [] },
-        degree: { type: String, required: true },
+        degree: { type: String, required: false, default: "" },
         languages: { type: [String], default: [] },
         skillsToLearn: { type: [String], default: [] },
-        pastProjects: [
+        pastProjects: { type: [
             {
                 title: { type: String, required: true },
                 description: { type: String, required: true },
                 techUsed: { type: [String], default: [] },
                 link: { type: String }
             }
-        ],
+        ], default: [] },
         pastMatchProjects: { type: [mongoose.Schema.Types.ObjectId], ref: 'Project', default: [] }
     },
     projectsOwned: { type: [mongoose.Schema.Types.ObjectId], ref: 'Project', default: [] },
