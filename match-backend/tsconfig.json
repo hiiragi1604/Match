@@ -8,7 +8,8 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "sourceMap": true,
-    "inlineSources": true
+    "inlineSources": true,
+    "resolveJsonModule": true
   },
   "include": ["src/**/*"],
   // "files": [], // Add custom types files here

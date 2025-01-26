@@ -4,6 +4,7 @@ import { errorHandler } from "./middleware/errorHandler";
 import UserRouter from "./routes/userRoutes";
 import projectRoutes from "./routes/projectRoutes";
 import adminRoute from "./routes/adminRoutes";
+import AuthRouter from "./routes/authRoute";
 import cors from "cors";
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(errorHandler);
 app.use("/user", UserRouter);
 app.use("/projects", projectRoutes); 
 app.use("/admin", adminRoute);
+app.use("/auth", AuthRouter);
 
 // Test route
 app.get("/ping", (req, res) => {
