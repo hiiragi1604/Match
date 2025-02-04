@@ -38,6 +38,10 @@ interface IUser extends Document {
     };
     projectsOwned: mongoose.Types.ObjectId[];
     appliedProjects: IAppliedProject[];
+    chatRooms: [{
+        chatRoomId: mongoose.Types.ObjectId;
+        chatRoomName: string;
+    }]
 }
 
 // Create the User Schema
@@ -47,6 +51,7 @@ const userSchema = new Schema<IUser>({
         name: { type: String, required: false, default: "" },
         dob: { type: Date, required: false, default: new Date() },
         university: { type: String, required: false, default: "" },
+        username: { type: String, required: false, default: "" },
     },
     technicalInfo: {
         skills: { type: [String], default: [] },
@@ -64,8 +69,16 @@ const userSchema = new Schema<IUser>({
         pastMatchProjects: { type: [mongoose.Schema.Types.ObjectId], ref: 'Project', default: [] }
     },
     projectsOwned: { type: [mongoose.Schema.Types.ObjectId], ref: 'Project', default: [] },
-    appliedProjects: { type: [appliedProjectSchema], default: [] }
+    appliedProjects: { type: [appliedProjectSchema], default: [] },
+    chatRooms: { type: [
+        {
+            chatRoomId: { type: mongoose.Schema.Types.ObjectId, ref: 'ChatRoom' },
+            chatRoomName: { type: String, required: true }
+        }
+    ], default: [] }
+
 });
+
 
 // Create the User Model
 const User = mongoose.model<IUser>('User', userSchema);

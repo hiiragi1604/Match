@@ -61,3 +61,91 @@ export const getChatRoom = async (req: Request, res: Response, next: NextFunctio
         next(error);
     }
 }
+
+//Get all chat rooms for a user
+export const getChatRoomsForUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = await User.findOne({
+            firebaseUid: req.user.uid
+        });
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+        res.status(200).json(user.chatRooms);
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const mockCreateChatRoom = async (req: Request, res: Response, next: NextFunction) => {
+    const participant = req.body.participants;
+    const projectId = req.body.projectId;
+    const firebaseUser = await User.findOne({
+        firebaseUid: req.user.uid
+    });
+
+    if (!firebaseUser) {
+        res.status(404).json({ message: "User not found" });
+        return;
+    }
+    const user = await User.findOne({
+        firebaseUid: req.user.uid,
+    });
+
+    if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+    }
+
+    const mongoParticipant = await User.findOne({
+        _id: { $in: participant }
+    });
+
+    if (!mongoParticipant) {
+        res.status(404).json({ message: "Participant not found" });
+        return;
+    }
+
+    const project = await Project.findById(projectId);
+
+    if (!project) {
+        res.status(404).json({ message: "Project not found" });
+        return;
+    }
+
+    console.log("creating mock chat room");
+
+
+    const chatRoom = await ChatRoom.create({
+        projectId,
+        creator: user._id,
+        participants: [user._id, participant],
+        lastActive: new Date(),
+        createdAt: new Date(),
+
+    });
+
+    const chatHistory = await ChatHistory.create({
+        chatRoom: chatRoom._id,
+        messages: [],
+    });
+    chatRoom.chatHistory = chatHistory._id as mongoose.Types.ObjectId;
+    await chatRoom.save();
+
+    //Update user chatRooms
+    user.chatRooms.push({
+        chatRoomId: chatRoom._id as mongoose.Types.ObjectId,
+        chatRoomName: project.name
+    });
+    await user.save();
+
+    //Update participant chatRooms
+    mongoParticipant.chatRooms.push({
+        chatRoomId: chatRoom._id as mongoose.Types.ObjectId,
+        chatRoomName: project.name
+    });
+    await mongoParticipant.save();
+    res.status(201).json(chatRoom);
+
+}

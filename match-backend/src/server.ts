@@ -1,23 +1,35 @@
 import app from "./app";
 import { connectToDatabase, closeDatabaseConnection } from "./database";
+import { Server } from "socket.io";
+import http from "http";
+import { setupSocketIO } from "./socket";
+
 
 const PORT = process.env.PORT || 6969;
 
 const startServer = async () => {
   try {
     await connectToDatabase();
-    const server = app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+    
+    const httpServer = http.createServer(app);
+    const io = new Server(httpServer, {
+      cors: {
+        origin: process.env.CLIENT_URL || "http://localhost:5173", 
+        methods: ["GET", "POST"]
+      }
     });
 
-    server.on("error", (error) => {
-      console.error("Failed to start server:", error.message, error.stack);
+    // Setup Socket.IO event handlers
+    setupSocketIO(io);
+
+    httpServer.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
     });
 
     const gracefulShutdown = async () => {
       console.log("Shutting down gracefully...");
       await closeDatabaseConnection();
-      server.close((err) => {
+      httpServer.close((err) => {
         if (err) {
           console.error("Error closing server:", err);
           process.exit(1);
