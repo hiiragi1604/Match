@@ -14,7 +14,7 @@ const startServer = async () => {
     const httpServer = http.createServer(app);
     const io = new Server(httpServer, {
       cors: {
-        origin: process.env.CLIENT_URL || "http://localhost:5173", // Add your frontend URL
+        origin: process.env.CLIENT_URL || "http://localhost:5173", 
         methods: ["GET", "POST"]
       }
     });
