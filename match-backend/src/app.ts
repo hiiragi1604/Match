@@ -2,10 +2,13 @@ import dotenv from "dotenv";
 import express from "express";
 import { errorHandler } from "./middleware/errorHandler";
 import UserRouter from "./routes/userRoutes";
-import projectRoutes from "./routes/projectRoutes";
-import adminRoute from "./routes/adminRoutes";
+import ProjectRoutes from "./routes/projectRoutes";
+import AdminRoutes from "./routes/adminRoutes";
 import AuthRouter from "./routes/authRoute";
+import ChatRoutes from "./routes/chatRoutes";
 import cors from "cors";
+
+
 
 dotenv.config();
 
@@ -17,10 +20,14 @@ app.use(express.json());
 app.use(errorHandler);
 
 // Routes
-app.use("/user", UserRouter);
-app.use("/projects", projectRoutes); 
-app.use("/admin", adminRoute);
+app.use("/users", UserRouter);
+app.use("/projects", ProjectRoutes);
+app.use("/admin", AdminRoutes);
 app.use("/auth", AuthRouter);
+app.use("/chat", ChatRoutes);
+
+
+
 
 // Test route
 app.get("/ping", (req, res) => {
