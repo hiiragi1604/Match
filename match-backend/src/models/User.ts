@@ -48,13 +48,13 @@ interface IUser extends Document {
 const userSchema = new Schema<IUser>({
     firebaseUid: { type: String, required: false, unique: true }, //Set to false because we are not creating a user in Firebase when we create a user in MongoDB (Testing purposes)
     personalInfo: {
-        name: { type: String, required: false, default: "" },
+        name: { type: String, required: true, default: "" },
         dob: { type: Date, required: false, default: new Date() },
         university: { type: String, required: false, default: "" },
-        username: { type: String, required: false, default: "" },
+        username: { type: String, required: true, default: "" },
     },
     technicalInfo: {
-        skills: { type: [String], default: [] },
+        skills: { type: [String], required: true, default: [] },
         degree: { type: String, required: false, default: "" },
         languages: { type: [String], default: [] },
         skillsToLearn: { type: [String], default: [] },
