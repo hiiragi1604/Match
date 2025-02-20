@@ -21,7 +21,7 @@ interface IUser extends Document {
         university: string;
         username: string;
         email: string;
-        password: string;  //should be hashed
+        // password: string;  //should be hashed
     };
     technicalInfo: {
         skills: string[];
@@ -46,12 +46,13 @@ interface IUser extends Document {
 
 // Create the User Schema
 const userSchema = new Schema<IUser>({
-    firebaseUid: { type: String, required: false, unique: true }, //Set to false because we are not creating a user in Firebase when we create a user in MongoDB (Testing purposes)
+    firebaseUid: { type: String, required: true, unique: true }, 
     personalInfo: {
         name: { type: String, required: true, default: "" },
         dob: { type: Date, required: false, default: new Date() },
         university: { type: String, required: false, default: "" },
         username: { type: String, required: true, default: "" },
+        email: { type: String, required: true, default: "" }
     },
     technicalInfo: {
         skills: { type: [String], required: true, default: [] },
