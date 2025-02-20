@@ -46,6 +46,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
             res.status(400).json({ message: "User data is required" });
             return;
         }
+        console.log(req.body);
         const user = await User.create(req.body);
         res.status(201).json(user);
         return;
@@ -75,5 +76,24 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
         next(error);
     }
 
+}
+
+//Get user by firebaseUid
+export const getUserByFirebaseUid = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const uid = req.params.uid;
+        if(!uid) {
+            res.status(400).json({ message: "Firebase UID is required" });
+            return;
+        }
+        const user = await User.findOne({ firebaseUid: uid });
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
 }
 
