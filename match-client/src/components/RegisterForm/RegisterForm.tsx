@@ -27,18 +27,7 @@ const RegisterForm = () => {
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(""); // Clear previous errors
-        
-        const userData = {
-            personalInfo: {
-                name: formData.name,
-                username: formData.username,
-            },
-            technicalInfo: {
-                skills: formData.skills,
-                languages: formData.languages
-            }
-        }
-        
+ 
         try {
             if (password !== confirmPassword) {
                 setError("Passwords do not match");
@@ -50,12 +39,28 @@ const RegisterForm = () => {
                 setError("Username already in use");
                 return;
             }
-            const response = await axios.post("http://localhost:6969/users/create", { ...userData, email });
+
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            console.log( userCredential.user?.uid);
+            const firebaseUid = userCredential.user?.uid;
+
+            const userData = {
+                personalInfo: {
+                    name: formData.name,
+                    username: formData.username,
+                    email: email
+                },
+                technicalInfo: {
+                    skills: formData.skills,
+                    languages: formData.languages
+                }
+            }
+
+            const response = await axios.post("http://localhost:6969/users/create", { ...userData, firebaseUid });
             console.log("User registered:", response);
             console.log("User data:", userData);
             
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            console.log(userCredential);
+            
             navigate("/");
 
         } catch (error) {
