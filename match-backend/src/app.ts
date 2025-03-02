@@ -6,6 +6,7 @@ import ProjectRoutes from "./routes/projectRoutes";
 import AdminRoutes from "./routes/adminRoutes";
 import AuthRouter from "./routes/authRoute";
 import ChatRoutes from "./routes/chatRoutes";
+import RecommenderRoutes from "./routes/recommenderRoutes";
 import cors from "cors";
 
 
@@ -25,8 +26,7 @@ app.use("/projects", ProjectRoutes);
 app.use("/admin", AdminRoutes);
 app.use("/auth", AuthRouter);
 app.use("/chat", ChatRoutes);
-
-
+app.use("/match", RecommenderRoutes);
 
 
 // Test route

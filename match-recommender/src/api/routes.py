@@ -160,12 +160,12 @@ async def create_user_embeddings(db: Database = Depends(get_db)):
 @router.get("/matching/user/{userId}")
 async def get_user_matches(userId: str):
     try:
-        # Find user embedding document
-        user_embedding_doc = next(obj for obj in Shared.user_embeddings_list if obj["userId"] == userId)
-        if not user_embedding_doc:
-            raise HTTPException(status_code=404, detail="User not found")
+        user_embedding_doc = next(
+            obj for obj in Shared.user_embeddings_list 
+            if str(obj["userId"]) == userId
+        )
         
-        # Extract just the embeddings for comparison
+        # Extract embeddings for comparison
         user_embedding = user_embedding_doc["embedding"]
         project_embeddings = [proj["embedding"] for proj in Shared.project_embeddings_list]
         
@@ -175,14 +175,14 @@ async def get_user_matches(userId: str):
         # Get matched projects and add similarity scores
         matched_projects = []
         for i, (index, score) in enumerate(zip(top_k_indices, top_k_scores)):
-            project = Shared.project_embeddings_list[index].copy()
-            # Convert ObjectId to string
-            if "_id" in project:
-                project["_id"] = str(project["_id"])
-            project["similarityScore"] = float(score)
-            del project["embedding"]
+            # Create a new dict with string IDs
+            project = {
+                "projectId": str(Shared.project_embeddings_list[index]["projectId"]),
+                "similarityScore": float(score)
+            }
             matched_projects.append(project)
             
+        print(matched_projects)
         return matched_projects
     except StopIteration:
         raise HTTPException(status_code=404, detail="User not found")
@@ -190,10 +190,10 @@ async def get_user_matches(userId: str):
 @router.get("/matching/project/{projectId}")
 async def get_project_matches(projectId: str):
     try:
-        # Find project embedding document
-        project_embedding_doc = next(obj for obj in Shared.project_embeddings_list if obj["projectId"] == projectId)
-        if not project_embedding_doc:
-            raise HTTPException(status_code=404, detail="Project not found")
+        project_embedding_doc = next(
+            obj for obj in Shared.project_embeddings_list 
+            if str(obj["projectId"]) == projectId
+        )
         
         # Extract just the embeddings for comparison
         project_embedding = project_embedding_doc["embedding"]
@@ -205,12 +205,11 @@ async def get_project_matches(projectId: str):
         # Get matched users and add similarity scores
         matched_users = []
         for i, (index, score) in enumerate(zip(top_k_indices, top_k_scores)):
-            user = Shared.user_embeddings_list[index].copy()
-            # Convert ObjectId to string
-            if "_id" in user:
-                user["_id"] = str(user["_id"])
-            user["similarityScore"] = float(score)
-            del user["embedding"]
+            # Create a new dict with string IDs
+            user = {
+                "userId": str(Shared.user_embeddings_list[index]["userId"]),
+                "similarityScore": float(score)
+            }
             matched_users.append(user)
             
         return matched_users
