@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { getAllProjects, getProjectById, createProject, updateProject, deleteProject, searchProjects, applyToProject, updateApplicationStatus, setRoleForProjectMember, setProjectVisibility} from "../controllers/projectController";
+import { getAllProjects, getProjectById, createProject, updateProject, deleteProject, searchProjects, applyToProject, updateApplicationStatus, setRoleForProjectMember, setProjectVisibility, getProjectApplicants} from "../controllers/projectController";
 
 const ProjectRouter = express.Router();
 
@@ -14,6 +14,9 @@ ProjectRouter.get("/all", getAllProjects);
 
 // GET a project by ID
 ProjectRouter.get("/getById/:id", getProjectById);
+
+// GET all applicants for a project
+ProjectRouter.get("/applicants/:id", getProjectApplicants);
 
 // Search projects
 ProjectRouter.get("/search", searchProjects);

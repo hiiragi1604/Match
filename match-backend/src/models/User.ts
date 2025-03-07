@@ -46,7 +46,7 @@ interface IUser extends Document {
 
 // Create the User Schema
 const userSchema = new Schema<IUser>({
-    firebaseUid: { type: String, required: true, unique: true }, 
+    firebaseUid: { type: String, required: false, unique: true }, 
     personalInfo: {
         name: { type: String, required: true, default: "" },
         dob: { type: Date, required: false, default: new Date() },
