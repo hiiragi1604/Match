@@ -11,6 +11,10 @@ export const NavBar = () => {
     setIsOwner(!isOwner);
   }
   if (loading) return <div>Loading...</div>;
+  const handleSignOut = () => {
+    signOutUser();
+    localStorage.removeItem("uid");
+  }
   return (
     <div className={navBarStyle.container}>
         <ul className={navBarStyle.navlist}>
@@ -18,8 +22,9 @@ export const NavBar = () => {
             <li className={navBarStyle.navitem}><Link to="/match">Match</Link></li>
             <li className={navBarStyle.navitem}><Link to="/search">Search</Link></li>
             <li className={navBarStyle.navitem}><Link to="/chat">Chat</Link></li>
+            <li className={navBarStyle.navitem}><Link to="/projects">Owned Projects</Link></li>
             {isOwner ? <li className={navBarStyle.navitem} onClick={setOwnerMode}>Owner</li> : <li className={navBarStyle.navitem} onClick={setOwnerMode}>User</li>}
-            {user ? <button className={navBarStyle.navitem} onClick={signOutUser}>Sign out</button> : <li className={navBarStyle.navitem}><Link to="/signin">Sign in</Link></li>}
+            {user ? <button className={navBarStyle.navitem} onClick={() => handleSignOut()}>Sign out</button> : <li className={navBarStyle.navitem}><Link to="/signin">Sign in</Link></li>}
             {!user ? <li className={navBarStyle.navitem}><Link to="/register">Register</Link></li> : null}
         </ul>
     </div>

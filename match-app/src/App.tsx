@@ -12,6 +12,8 @@ import RegisterForm from "./components/RegisterForm/RegisterForm";
 import { ChatList } from "./components/ChatList/ChatList";
 import { ChatRoom } from "./components/ChatRoom/ChatRoom";
 import { Match } from "./components/Match/Match";
+import { OwnedProjects } from "./components/OwnedProjects/OwnedProjects";
+import { ProjectDetails } from "./components/ProjectDetails/ProjectDetails";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
             <Route path="/chat" element={<ChatList />} />
             <Route path="/chat/:chatRoomId" element={<ChatRoom />} />
             <Route path="/match" element={<Match />} />
+            <Route path="/projects" element={<OwnedProjects />} />
+            <Route path="/projects/:projectId" element={<ProjectDetails />} />
           </Routes>
         </Router>
       </IsOwnerProvider>
