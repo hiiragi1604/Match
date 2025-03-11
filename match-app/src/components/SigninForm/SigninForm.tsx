@@ -5,6 +5,7 @@ import { verifyUser } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import SignInFormStyle from "./SigninForm.module.css";
 import { FirebaseError } from "firebase/app";
+import axios from "axios";
 
 const SigninForm = () => {
     const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ const SigninForm = () => {
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(""); // Clear previous errors
+        const baseUri = import.meta.env.VITE_MATCH_API_URI;
         
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -24,6 +26,9 @@ const SigninForm = () => {
             const response = await verifyUser(token);
             console.log(response);
             if (response.status === 200) {
+                const uid = await axios.get(`${baseUri}/users/firebase/${userCredential.user?.uid}`);
+                console.log(`User ID: ${uid.data.id}`);
+                localStorage.setItem("uid", uid.data._id);// store in cookie later on
                 console.log("Signed in successfully");
                 navigate("/");
             }
