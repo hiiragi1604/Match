@@ -8,6 +8,7 @@ import AuthRouter from "./routes/authRoute";
 import ChatRoutes from "./routes/chatRoutes";
 import RecommenderRoutes from "./routes/recommenderRoutes";
 import cors from "cors";
+import SwipeRouter from "./routes/swipeRoutes";
 
 
 
@@ -27,6 +28,7 @@ app.use("/admin", AdminRoutes);
 app.use("/auth", AuthRouter);
 app.use("/chat", ChatRoutes);
 app.use("/match", RecommenderRoutes);
+app.use("/swipe", SwipeRouter);
 
 
 // Test route
