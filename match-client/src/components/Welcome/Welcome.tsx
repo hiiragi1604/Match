@@ -7,5 +7,4 @@ export default function Welcome() {
   if (user) {
     return <div className={welcomeStyle.welcomeContainer}>Welcome {user.email}</div>;
   }
-  return <div className={welcomeStyle.welcomeContainer}>Please sign in</div>;
 }

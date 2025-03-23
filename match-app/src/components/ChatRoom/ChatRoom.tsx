@@ -106,7 +106,7 @@ export const ChatRoom: React.FC = () => {
                     onClick={() => navigate('/chat')} 
                     className={chatRoomStyle.backButton}
                 >
-                    ← Back
+                    ←
                 </button>
             </div>
             <div className={chatRoomStyle.messagesContainer}>
