@@ -388,38 +388,39 @@ export const addMember = async (req: Request, res: Response, next: NextFunction)
 
 // Set project visivbility
 export const setProjectVisibility = async (req: Request, res: Response, next: NextFunction) => {
-    try{
-        const {projectId, visibility, userId } = req.body;
-
-        if (!projectId || !visibility || !userId) {
-            res.status(400).json({ message: "Missing required fields" });
-            return 
-        }
-
-        const project = await Project.findById(projectId);
-
-        if (!project) {
-            res.status(404).json({ message: "Project not found" });
-            return 
-        }
-
-        const { role, error } = await getUserRoleInProject(userId, projectId);
-        if (error) {
-            res.status(404).json({ message: error });
-            return 
-        }
-
-        if (role !== 'Owner' && role !== 'Admin') {
-            res.status(403).json({ message: 'You do not have permission to perform this operation' });
-            return 
-        }
-
-        project.visibility = visibility;
-    }catch (error) {
-        console.error(error);
-        next(error);
+    try {
+      const { projectId, visibility, userId } = req.body;
+  
+      if (!projectId || !visibility || !userId) {
+        res.status(400).json({ message: "Missing required fields" });
+        return;
+      }
+  
+      const project = await Project.findById(projectId);
+      if (!project) {
+        res.status(404).json({ message: "Project not found" });
+        return;
+      }
+  
+      const { role, error } = await getUserRoleInProject(userId, projectId);
+      if (error) {
+        res.status(404).json({ message: error });
+        return;
+      }
+  
+      if (role !== 'Owner' && role !== 'Admin') {
+        res.status(403).json({ message: 'You do not have permission to perform this operation' });
+        return;
+      }
+  
+      project.visibility = visibility;
+      await project.save();  // Save the updated project
+      res.status(200).json({ message: "Project visibility updated successfully" }); // Send response
+    } catch (error) {
+      console.error(error);
+      next(error);
     }
-}
+  };
 //Search projects
 export const searchProjects = async (
     req: Request,

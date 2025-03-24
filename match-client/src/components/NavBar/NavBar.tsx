@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import navBarStyle from "./NavBar.module.css"
+import navBarStyle from "./NavBar.module.scss"
 import { useAuth } from '../../context/AuthContext';
 import { signOutUser } from '../../utils/signOut';
 

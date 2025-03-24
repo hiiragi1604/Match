@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import navBarStyle from "./NavBar.module.scss"
+import navBarStyle from "../NavBar/NavBar.module.scss";
 import { useAuth } from '../../context/AuthContext';
 import { signOutUser } from '../../utils/signOut';
 import { useIsOwner } from '../../context/IsOwnerContext';

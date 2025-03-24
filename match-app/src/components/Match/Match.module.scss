@@ -1,0 +1,103 @@
+@import '../styles/variables.scss';
+@import '../styles/mixins.scss';
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+h1 {
+  @include font-settings(linear-gradient( #ffffff 0%, #999999 100%), 4rem, bold);
+  position: relative;
+  z-index: 5;
+  margin-top:70px;
+  margin-bottom: 0;
+}
+
+
+.tinderCardsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 1375px;
+  height: 779px;
+  @include gradient-background;
+  
+  
+  border-radius: 30px;
+  margin: 10px 0;
+}
+
+.backgroundImage {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  border-radius: 30px;
+  object-fit: cover;
+  z-index: 1; 
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
+}
+/* .blackRectangle {
+  position: absolute;
+  width: 1150px;
+  height: 645px;
+  background-color: #171717; 
+  border-radius: 20px; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2; 
+} */
+.swipe {
+  position: absolute;
+  z-index: 3;
+}
+
+.card {
+  background-color: $card-bg;
+  width: 300px;
+  max-width: 85vw;
+  height: 400px;
+  padding: 20px;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  z-index: 4;
+  @include rainbow-outline(2px, 30px);
+}
+
+/* ... rest of card styles remain the same ... */
+
+@media (max-width: 1375px) {
+  .tinderCardsContainer {
+    width: 100%;
+    height: 779px; /* Maintain height */
+    max-width: 100%;
+    border-radius: 0; /* Remove border-radius on smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .tinderCardsContainer {
+    height: 500px; /* Adjust height for mobile */
+  }
+  
+  .card {
+    width: 90%;
+    height: 350px;
+  }
+}

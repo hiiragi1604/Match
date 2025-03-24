@@ -10,20 +10,27 @@ import { AuthProvider } from "./context/AuthContext";
 import RegisterForm from "./components/RegisterForm/RegisterForm";
 import Welcome from "./components/Welcome/Welcome";
 
+// Add some basic CSS to ensure proper layout
+import './App.css';
+
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <Welcome />
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/project" element={<Project />} />
-          <Route path="/signin" element={<SigninForm />} />
-          <Route path="/register" element={<RegisterForm />} />
-        </Routes>
+        <div className="app-container">
+          <Welcome />
+          <NavBar />
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/project" element={<Project />} />
+              <Route path="/signin" element={<SigninForm />} />
+              <Route path="/register" element={<RegisterForm />} />
+            </Routes>
+          </main>
+        </div>
       </Router>
     </AuthProvider>
   );

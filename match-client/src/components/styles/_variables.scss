@@ -1,0 +1,24 @@
+// src/styles/_variables.scss
+
+@font-face {
+    font-family: 'Geist';
+    src: url('/fonts/Geist-Regular.woff2') format('woff2'),
+         url('/fonts/Geist-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  // Now create a variable for the font family:
+  $font-family-geist: 'Geist', sans-serif;
+  
+  // Colors
+  $primary-color: #333;
+  $secondary-color: #ffffff;
+  $hover-color: #ddd;
+  
+  // Dimensions
+  $nav-height: 60px;
+  
+  // Misc
+  $transition-speed: 0.3s;
+  
