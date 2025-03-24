@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createUser, getAllUsers, getUserById, getUserByFirebaseUid } from '../controllers/userController';
+import { createUser, getAllUsers, getUserById, getUserByFirebaseUid, getUserProjects } from '../controllers/userController';
 
 const UserRouter = express.Router();
 
@@ -19,5 +19,8 @@ UserRouter.post("/create", createUser);
 
 // Get user by Firebase UID route
 UserRouter.get("/firebase/:uid", getUserByFirebaseUid);
+
+// Get user's onwed project
+UserRouter.get("/projects/:id", getUserProjects);
 
 export default UserRouter;

@@ -33,7 +33,7 @@ const projectSchema = new Schema<IProject>({
     field: { type: String, required: true },
     location: { type: String, default: null }, // Optional
     applicants: { type: [mongoose.Schema.Types.ObjectId], ref: 'User', default: [] }, // Optional
-    visibility: { type: String, required: true }
+    visibility: { type: String, required: false }
 });
 
 // Create the Project Model

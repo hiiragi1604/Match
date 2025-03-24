@@ -548,3 +548,18 @@ export const searchProjects = async (
       }
     }
   };
+
+// Get project's applicants
+export const getProjectApplicants = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const projectId = req.params.id;
+        const project = await Project.findById(projectId);
+        if (!project) {
+            res.status(404).json({ message: "Project not found" });
+            return;
+        }
+        res.status(200).json(project.applicants);
+    } catch (error) {
+        next(error);
+    }
+};

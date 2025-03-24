@@ -82,7 +82,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 export const getUserByFirebaseUid = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const uid = req.params.uid;
-        if(!uid) {
+        if (!uid) {
             res.status(400).json({ message: "Firebase UID is required" });
             return;
         }
@@ -91,9 +91,25 @@ export const getUserByFirebaseUid = async (req: Request, res: Response, next: Ne
             res.status(404).json({ message: "User not found" });
             return;
         }
-        res.status(200).json(user);
+        res.status(200).json({ id: user._id, ...user.toObject() });
     } catch (error) {
         next(error);
     }
 }
+
+//Get user's project 
+export const getUserProjects = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = await User.findById(req.params.id).populate('projectsOwned');
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+        res.status(200).json(user.projectsOwned);
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 

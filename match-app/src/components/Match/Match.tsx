@@ -7,7 +7,11 @@ import { getUserFromFirebaseUid } from "../../api/user";
 import TinderCard from "react-tinder-card";
 import styles from "./Match.module.scss"; // Import the CSS module
 import { getProjectById } from "../../api/project";
+<<<<<<< HEAD
 import abstractBackground from "../../assets/abstract-background-black-white-texture-grainy_474888-5433.avif";
+=======
+import { recordSwipping } from "../../api/swipe";
+>>>>>>> main
 
 export const Match = () => {
   const { isOwner } = useIsOwner();
@@ -52,6 +56,7 @@ export const Match = () => {
 
   console.log("Recommended projects:", recommendedProjects);
 
+<<<<<<< HEAD
   const swiped = (direction: string, projectId: string) => {
     console.log(`You swiped: ${direction} on ${projectId}`);
 
@@ -59,6 +64,17 @@ export const Match = () => {
     setRecommendedProjects((prevProjects) =>
       prevProjects.filter((project) => project._id !== projectId)
     );
+=======
+  const swiped = async (direction: string, projectId: string) => {
+    if (!user) {
+      navigate("/signin");
+      return;
+    }
+    //This still take ID from firebase, need to change to mongoDB ID
+    const mongoUser = await getUserFromFirebaseUid(user.uid);
+    recordSwipping(mongoUser._id, projectId, direction, new Date());
+    console.log("You swiped: " + direction + " on " + projectId);
+>>>>>>> main
   };
 
   const outOfFrame = (projectName: string) => {
