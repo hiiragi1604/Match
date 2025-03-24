@@ -7,11 +7,8 @@ import { getUserFromFirebaseUid } from "../../api/user";
 import TinderCard from "react-tinder-card";
 import styles from "./Match.module.scss"; // Import the CSS module
 import { getProjectById } from "../../api/project";
-<<<<<<< HEAD
 import abstractBackground from "../../assets/abstract-background-black-white-texture-grainy_474888-5433.avif";
-=======
 import { recordSwipping } from "../../api/swipe";
->>>>>>> main
 
 export const Match = () => {
   const { isOwner } = useIsOwner();
