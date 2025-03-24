@@ -7,6 +7,7 @@ from src.models.projectEmbedding import project_embedding_schema
 from src.models.userEmbedding import user_embedding_schema
 from src.config import MONGODB_URI
 from src.shared import Shared
+from bson import ObjectId
 
 def get_database() -> Database:
     #Get the database instance
@@ -49,3 +50,13 @@ def init_collections(db: Database):
 def get_collection(db: Database, name: str) -> Collection:
     #Get a collection by name
     return db.get_collection(name) 
+
+def get_swipe_history(db: Database, user_id: str):
+    swipes = db["swipes"].find(
+        {"swiper": ObjectId(user_id)}
+    ).sort("timestamp", -1).to_list(length=None)
+        
+    return swipes
+
+def delete_swipe(swipe_id: str, db: Database):
+    db["swipes"].delete_one({"_id": ObjectId(swipe_id)})

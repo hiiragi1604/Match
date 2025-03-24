@@ -35,6 +35,7 @@ export const Match = () => {
         }
 
         const projects = await getRecommendedProjects(mongoUser._id);
+        console.log ("Projects:", projects);
         const projectsData = await Promise.all(
           projects.map(async (project: any) => {
             const projectData = await getProjectById(project.projectId);
@@ -53,15 +54,6 @@ export const Match = () => {
 
   console.log("Recommended projects:", recommendedProjects);
 
-<<<<<<< HEAD
-  const swiped = (direction: string, projectId: string) => {
-    console.log(`You swiped: ${direction} on ${projectId}`);
-
-    // Remove the swiped project from the list
-    setRecommendedProjects((prevProjects) =>
-      prevProjects.filter((project) => project._id !== projectId)
-    );
-=======
   const swiped = async (direction: string, projectId: string) => {
     if (!user) {
       navigate("/signin");
@@ -71,7 +63,6 @@ export const Match = () => {
     const mongoUser = await getUserFromFirebaseUid(user.uid);
     recordSwipping(mongoUser._id, projectId, direction, new Date());
     console.log("You swiped: " + direction + " on " + projectId);
->>>>>>> main
   };
 
   const outOfFrame = (projectName: string) => {

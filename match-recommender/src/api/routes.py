@@ -9,6 +9,8 @@ from src.api.schemas import ProjectEmbeddingRequestBody, UserEmbeddingRequestBod
 from src.services.matching import top_k_matches
 from src.shared import Shared
 
+from src.services.database import get_database, get_swipe_history, delete_swipe
+
 router = APIRouter()
 
 # Dependency to get database instance
@@ -158,34 +160,81 @@ async def create_user_embeddings(db: Database = Depends(get_db)):
 
 #Matching routes
 @router.get("/matching/user/{userId}")
-async def get_user_matches(userId: str):
+async def get_user_matches(userId: str, k: int = 10):
     try:
         user_embedding_doc = next(
             obj for obj in Shared.user_embeddings_list 
             if str(obj["userId"]) == userId
         )
         
-        # Extract embeddings for comparison
-        user_embedding = user_embedding_doc["embedding"]
-        project_embeddings = [proj["embedding"] for proj in Shared.project_embeddings_list]
+        # Get swipe history
+        db = get_database()
+        swipes = get_swipe_history(db, userId)
         
-        # Get top k matches
-        top_k_indices, top_k_scores = top_k_matches(user_embedding, project_embeddings)
+        # Create sets for lookup
+        liked_project_ids = {str(swipe["targetProject"]) for swipe in swipes if swipe["action"] == "like"}
+        dislike_swipes = {
+            str(swipe["targetProject"]): swipe["_id"] 
+            for swipe in swipes 
+            if swipe["action"] == "dislike"
+        }
+        disliked_project_ids = set(dislike_swipes.keys())
         
-        # Get matched projects and add similarity scores
+        # Find unswiped projects
+        available_projects = [
+            proj for proj in Shared.project_embeddings_list 
+            if str(proj["projectId"]) not in liked_project_ids 
+            and str(proj["projectId"]) not in disliked_project_ids
+        ]
+        
+        # If no new projects available, use previously disliked ones
+        if not available_projects:
+            print("No new projects available, now including previously disliked projects...")
+            available_projects = [
+                proj for proj in Shared.project_embeddings_list 
+                if str(proj["projectId"]) not in liked_project_ids
+            ]
+        
+        if not available_projects:
+            print("No available projects found")
+            return []
+            
+        available_embeddings = [proj["embedding"] for proj in available_projects]
+        
+        # Get top k matches from available projects
+        top_k_indices, top_k_scores = top_k_matches(
+            user_embedding_doc["embedding"], 
+            available_embeddings,
+            k=k
+        )
+        
+        # Create response
         matched_projects = []
-        for i, (index, score) in enumerate(zip(top_k_indices, top_k_scores)):
-            # Create a new dict with string IDs
+        for idx, score in zip(top_k_indices, top_k_scores):
+            project_id = str(available_projects[idx]["projectId"])
+            was_disliked = project_id in disliked_project_ids
+            
+            # If project was previously disliked, delete the dislike swipe from db
+            if was_disliked:
+                swipe_id = dislike_swipes[project_id]
+                delete_swipe(str(swipe_id), db)
+                print(f"Deleted dislike record for project {project_id}")
+            
             project = {
-                "projectId": str(Shared.project_embeddings_list[index]["projectId"]),
-                "similarityScore": float(score)
+                "projectId": project_id,
+                "similarityScore": float(score),
+                "wasDisliked": was_disliked
             }
             matched_projects.append(project)
             
-        print(matched_projects)
+        print(f"Found {len(matched_projects)} matches")
         return matched_projects
+            
     except StopIteration:
         raise HTTPException(status_code=404, detail="User not found")
+    except Exception as e:
+        print(f"Error in get_user_matches: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/matching/project/{projectId}")
 async def get_project_matches(projectId: str):
